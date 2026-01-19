@@ -4,13 +4,14 @@ import Post from "../models/blog.js";
 // CREATE POST
 export const createPost = async (req, res) => {
   try {
-    const { header, description } = req.body;
+    const { header, description, category } = req.body;
 
     const imageUrls = req.files?.map(f => f.path) || [];
 
     const post = await Post.create({
       header,
       description,
+      category,
       images: imageUrls
     });
 
@@ -40,11 +41,11 @@ export const getPostById = async (req, res) => {
 // UPDATE POST
 export const updatePost = async (req, res) => {
   try {
-    const { header, description } = req.body;
+    const { header, description, category } = req.body;
 
     const imageUrls = req.files?.map(f => f.path);
 
-    const update = { header, description };
+    const update = { header, description, category };
     if (imageUrls?.length) update.images = imageUrls;
 
     const updated = await Post.findByIdAndUpdate(

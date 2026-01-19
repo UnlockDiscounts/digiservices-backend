@@ -112,6 +112,7 @@ Blog posts support image uploads (Cloudinary) using `multipart/form-data`.
 - Form fields:
 	- `header` (string, required)
 	- `description` (string, required)
+	- `category` (string, required) — blog post category
 	- `images` (file[], optional) — use the field name `images`; up to 10 files are supported
 
 Example curl (single image):
@@ -120,10 +121,11 @@ Example curl (single image):
 curl -X POST http://localhost:5000/api/v1/blog \
 	-F "header=My post" \
 	-F "description=Post description" \
+	-F "category=Technology" \
 	-F "images=@/path/to/image.jpg"
 ```
 
-Success response: 201 Created — post object with `images` array of URLs.
+Success response: 201 Created — post object with `images` array of URLs, `createdAt`, and `updatedAt` timestamps automatically generated.
 
 
 ### Get posts
@@ -145,7 +147,12 @@ Response: 200 OK — array of posts.
 - Method: PUT
 - URL: `/blog/:id`
 - Content-Type: `multipart/form-data`
-- Same fields as create — you may upload new images (also `images` field).
+- Fields:
+	- `header` (string, optional)
+	- `description` (string, optional)
+	- `category` (string, optional)
+	- `images` (file[], optional) — you may upload new images (also `images` field)
+- The `updatedAt` timestamp is automatically updated on modification.
 
 
 ### Delete a post
