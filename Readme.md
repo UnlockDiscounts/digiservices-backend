@@ -148,9 +148,10 @@ Response: 200 OK — array of posts.
 - URL: `/blog/:id`
 - Content-Type: `multipart/form-data`
 - Fields:
-	- `header` (string, optional)
-	- `description` (string, optional)
-	- `category` (string, optional)
+	- `header` (string, required)
+	- `description` (string, required)
+	- `category` (string, required)
+	- `status` (string, draft and published (default: draft))
 	- `images` (file[], optional) — you may upload new images (also `images` field)
 - The `updatedAt` timestamp is automatically updated on modification.
 

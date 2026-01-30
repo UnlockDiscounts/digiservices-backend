@@ -12,6 +12,7 @@ export const createPost = async (req, res) => {
       header,
       description,
       category,
+      status: "draft",
       images: imageUrls
     });
 
