@@ -3,6 +3,13 @@ import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import blogRouter from './routes/blog.routes.js';
 import contactRouter from './routes/contact.route.js';
+import servicesRouter from './routes/services.routes.js';
+import cardRouter from './routes/card.routes.js';
+import testimonialRouter from './routes/testimonial.routes.js';
+import faqRouter from './routes/faq.routes.js';
+import workRouter from './routes/work.routes.js';
+import previewRouter from './routes/preview.routes.js';
+
 dotenv.config();  
 const app = express();
 
@@ -16,6 +23,12 @@ app.get('/', (req, res) =>{
 
 app.use('/api/v1/blog', blogRouter);
 app.use('/api/v1/contact', contactRouter);
+app.use('/api/v1/services', servicesRouter);
+app.use('/api/v1/cards', cardRouter);
+app.use('/api/v1/testimonials', testimonialRouter);
+app.use('/api/v1/faqs', faqRouter);
+app.use('/api/v1/works', workRouter);
+app.use('/api/v1/preview', previewRouter);
 
 
 app.listen(process.env.PORT, async () => {

@@ -165,3 +165,51 @@ Response: 200 OK on success (or 404 if not found).
 
 ---
 
+
+## Services
+- POST `/services` (multipart/form-data)
+  - fields: `category` (string), `title` (string), `description` (string, optional)
+  - files: `files` (file[]), Cloudinary stores files in `services/` folder
+- GET `/services` — list services
+- GET `/services/:id` — get single service
+- PUT `/services/:id` — update (multipart/form-data; optional `files`)
+- DELETE `/services/:id`
+
+
+## Card Components
+- POST `/cards` (JSON)
+  - fields: `service` (optional service _id), `sections` (array of objects with `sectionTitle`, `title`, `description`)
+  - You can provide `sections` either as JSON array in request body or as a JSON string when using form-data.
+- GET `/cards`
+- GET `/cards/:id`
+- PUT `/cards/:id`
+- DELETE `/cards/:id`
+
+
+## Testimonials
+- POST `/testimonials` (multipart/form-data)
+  - fields: `name` (string), `description` (string)
+  - file: `file` (single file)
+- GET `/testimonials`
+- PUT `/testimonials/:id` (multipart/form-data)
+- DELETE `/testimonials/:id`
+
+
+## FAQs
+- POST `/faqs` (JSON) — `question` and `answer`
+- GET `/faqs`
+- PUT `/faqs/:id`
+- DELETE `/faqs/:id`
+
+
+## Work Examples
+- POST `/works` (multipart/form-data)
+  - fields: `title`, `description`
+  - files: `files` (file[]), supports any format; uploaded to Cloudinary `work_examples/` folder
+- GET `/works`
+- PUT `/works/:id` (multipart/form-data)
+- DELETE `/works/:id`
+
+
+## Preview (aggregate)
+- GET `/preview` — returns an object with `{ services, cards, testimonials, faqs, works }` so the frontend can render a preview page with all the content.
