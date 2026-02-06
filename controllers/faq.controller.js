@@ -2,8 +2,8 @@ import Faq from "../models/faq.model.js";
 
 export const createFaq = async (req, res) => {
   try {
-    const { question, answer } = req.body;
-    const faq = await Faq.create({ question, answer });
+    const { question, answer, service } = req.body;
+    const faq = await Faq.create({ question, answer, service });
     res.status(201).json(faq);
   } catch (err) {
     console.error(err);

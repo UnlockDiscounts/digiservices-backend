@@ -2,9 +2,9 @@ import Testimonial from "../models/testimonial.model.js";
 
 export const createTestimonial = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, service } = req.body;
     const file = req.file?.path;
-    const testimonial = await Testimonial.create({ name, description, file });
+    const testimonial = await Testimonial.create({ name, description, file, service });
     res.status(201).json(testimonial);
   } catch (err) {
     console.error(err);

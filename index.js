@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import connectDB from './config/db.js';
 import blogRouter from './routes/blog.routes.js';
 import contactRouter from './routes/contact.route.js';
@@ -12,6 +13,11 @@ import previewRouter from './routes/preview.routes.js';
 
 dotenv.config();  
 const app = express();
+
+// CORS middleware
+app.use(cors({
+  origin: ["http://localhost:5173", "http://localhost:5174"]
+}));
 
 // Body parsing middleware
 app.use(express.json());

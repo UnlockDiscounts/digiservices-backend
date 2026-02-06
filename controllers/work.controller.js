@@ -2,9 +2,9 @@ import Work from "../models/work.model.js";
 
 export const createWork = async (req, res) => {
   try {
-    const { title, description } = req.body;
+    const { title, description, service } = req.body;
     const files = req.files?.map(f => f.path) || [];
-    const work = await Work.create({ title, description, files });
+    const work = await Work.create({ title, description, files, service });
     res.status(201).json(work);
   } catch (err) {
     console.error(err);
