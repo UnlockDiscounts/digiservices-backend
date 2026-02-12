@@ -11,9 +11,8 @@ import faqRouter from './routes/faq.routes.js';
 import workRouter from './routes/work.routes.js';
 import previewRouter from './routes/preview.routes.js';
 
-dotenv.config();  
+dotenv.config();
 const app = express();
-
 
 const allowedOrigins = [
   "http://localhost:5173",
@@ -22,24 +21,17 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: allowedOrigins,
   credentials: true
 }));
 
 
-// Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res) =>{
-    res.send('Server is running');
-})
+app.get('/', (req, res) => {
+  res.send('Server is running');
+});
 
 app.use('/api/v1/blog', blogRouter);
 app.use('/api/v1/contact', contactRouter);
@@ -50,8 +42,7 @@ app.use('/api/v1/faqs', faqRouter);
 app.use('/api/v1/works', workRouter);
 app.use('/api/v1/preview', previewRouter);
 
-
 app.listen(process.env.PORT, async () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
-    await connectDB();
+  console.log(`Server is running on port ${process.env.PORT}`);
+  await connectDB();
 });
