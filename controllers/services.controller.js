@@ -4,22 +4,26 @@ import Service from "../models/service.model.js";
 export const createService = async (req, res) => {
   try {
     const { category, title, description, isActive } = req.body;
-    const files = req.files?.map(f => f.path) || [];
+
+    const files = req.files ? req.files.map(file => file.path) : [];
 
     const service = await Service.create({
       category,
       title,
       description,
       files,
-      isActive: isActive ?? true
+      isActive: isActive !== undefined ? isActive : true
     });
 
     res.status(201).json(service);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error" });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: error.message });
   }
 };
+
+
 
 
 export const getServices = async (req, res) => {

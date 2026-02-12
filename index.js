@@ -14,10 +14,24 @@ import previewRouter from './routes/preview.routes.js';
 dotenv.config();  
 const app = express();
 
-// CORS middleware
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://digi-services-seven.vercel.app"
+];
+
 app.use(cors({
-  origin: ["http://localhost:5173", "http://localhost:5174"]
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true
 }));
+
 
 // Body parsing middleware
 app.use(express.json());
