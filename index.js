@@ -1,87 +1,65 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import connectDB from './config/db.js';
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import connectDB from "./config/db.js";
 
-import blogRouter from './routes/blog.routes.js';
-import contactRouter from './routes/contact.route.js';
-import servicesRouter from './routes/services.routes.js';
-import cardRouter from './routes/card.routes.js';
-import testimonialRouter from './routes/testimonial.routes.js';
-import faqRouter from './routes/faq.routes.js';
-import workRouter from './routes/work.routes.js';
-import previewRouter from './routes/preview.routes.js';
+// Route Imports
+import blogRouter from "./routes/blog.routes.js";
+import contactRouter from "./routes/contact.route.js";
+import servicesRouter from "./routes/services.routes.js";
+import cardRouter from "./routes/card.routes.js";
+import testimonialRouter from "./routes/testimonial.routes.js";
+import faqRouter from "./routes/faq.routes.js";
+import workRouter from "./routes/work.routes.js";
+import previewRouter from "./routes/preview.routes.js";
 
 dotenv.config();
+
 const app = express();
 
+// 1. CORS - ALLOW EVERYTHING
+// This handles all origins, methods, and the OPTIONS preflight automatically
+app.use(cors({
+  origin: "*", 
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
-
+// 2. LOGGING MIDDLEWARE (For Debugging)
 app.use((req, res, next) => {
-  console.log("----- Incoming Request -----");
-  console.log("Method:", req.method);
-  console.log("URL:", req.originalUrl);
-  console.log("Origin Header:", req.headers.origin);
-  console.log("----------------------------");
+  console.log(`[${new Date().toISOString()}] ${req.method} request to: ${req.originalUrl}`);
   next();
 });
 
-
-const FRONTEND_URL = "https://digi-services-seven.vercel.app";
-
-app.use((req, res, next) => {
-  const requestOrigin = req.headers.origin;
-
-  console.log("CORS Debug → Request Origin:", requestOrigin);
-
-  if (requestOrigin === FRONTEND_URL) {
-    console.log("CORS Debug → Origin Matched");
-
-    res.header("Access-Control-Allow-Origin", FRONTEND_URL);
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    res.header("Access-Control-Allow-Credentials", "true");
-  } else {
-    console.log("CORS Debug → Origin NOT matched");
-  }
-
-  if (req.method === "OPTIONS") {
-    console.log("CORS Debug → Handling Preflight (OPTIONS)");
-    return res.sendStatus(200);
-  }
-
-  next();
-});
-
-
+// 3. BODY PARSERS
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
-
-app.get('/', (req, res) => {
-  console.log("Health check route hit");
-  res.send('Server is running');
+// 4. HEALTH CHECK ROUTE
+app.get("/", (req, res) => {
+  res.send("Server is running and CORS is wide open.");
 });
 
+// 5. API ROUTES
+app.use("/api/v1/blog", blogRouter);
+app.use("/api/v1/contact", contactRouter);
+app.use("/api/v1/services", servicesRouter);
+app.use("/api/v1/cards", cardRouter);
+app.use("/api/v1/testimonials", testimonialRouter);
+app.use("/api/v1/faqs", faqRouter);
+app.use("/api/v1/works", workRouter);
+app.use("/api/v1/preview", previewRouter);
 
-app.use('/api/v1/blog', blogRouter);
-app.use('/api/v1/contact', contactRouter);
-app.use('/api/v1/services', servicesRouter);
-app.use('/api/v1/cards', cardRouter);
-app.use('/api/v1/testimonials', testimonialRouter);
-app.use('/api/v1/faqs', faqRouter);
-app.use('/api/v1/works', workRouter);
-app.use('/api/v1/preview', previewRouter);
-
-
+// 6. START SERVER
 const startServer = async () => {
   try {
     await connectDB();
-    app.listen(process.env.PORT || 3000, () => {
-      console.log(`Server running on port ${process.env.PORT || 3000}`);
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
     });
   } catch (error) {
-    console.error("Server failed to start:", error);
+    console.error("❌ Server failed to start:", error);
     process.exit(1);
   }
 };
