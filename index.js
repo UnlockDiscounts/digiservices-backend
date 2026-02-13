@@ -15,33 +15,13 @@ import previewRouter from './routes/preview.routes.js';
 dotenv.config();
 const app = express();
 
-
-const FRONTEND_URL = "https://digi-services-seven.vercel.app";
-
 app.use(cors({
-  origin: FRONTEND_URL,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  origin: "https://digi-services-seven.vercel.app",
   credentials: true
 }));
 
-
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", FRONTEND_URL);
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  res.header("Access-Control-Allow-Credentials", "true");
-
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
-  next();
-});
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 
 app.get('/', (req, res) => {
   res.send('Server is running');
@@ -63,7 +43,7 @@ const startServer = async () => {
       console.log(`Server running on port ${process.env.PORT || 3000}`);
     });
   } catch (error) {
-    console.error("Server failed to start:", error);
+    console.error(error);
     process.exit(1);
   }
 };
