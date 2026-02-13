@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import connectDB from './config/db.js';
+
 import blogRouter from './routes/blog.routes.js';
 import contactRouter from './routes/contact.route.js';
 import servicesRouter from './routes/services.routes.js';
@@ -14,20 +15,15 @@ import previewRouter from './routes/preview.routes.js';
 dotenv.config();
 const app = express();
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "https://digi-services-seven.vercel.app"
-];
-
+//for testing purpose allwowing all origins
 app.use(cors({
-  origin: allowedOrigins,
+  origin: true,
   credentials: true
 }));
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 app.get('/', (req, res) => {
   res.send('Server is running');
@@ -42,7 +38,17 @@ app.use('/api/v1/faqs', faqRouter);
 app.use('/api/v1/works', workRouter);
 app.use('/api/v1/preview', previewRouter);
 
-app.listen(process.env.PORT, async () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
-  await connectDB();
-});
+
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(process.env.PORT || 3000, () => {
+      console.log(`Server running on port ${process.env.PORT || 3000}`);
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error);
+    process.exit(1);
+  }
+};
+
+startServer();
