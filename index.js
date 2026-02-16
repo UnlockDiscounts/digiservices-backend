@@ -14,8 +14,6 @@ import previewRouter from './routes/preview.routes.js';
 dotenv.config();
 const app = express();
 
-
-
 app.use((req, res, next) => {
   console.log("----- Incoming Request -----");
   console.log("Method:", req.method);
@@ -25,23 +23,28 @@ app.use((req, res, next) => {
   next();
 });
 
-
-const FRONTEND_URL = "https://digi-services-seven.vercel.app";
+const ALLOWED_ORIGINS = [
+  "https://digi-services-seven.vercel.app",
+  "http://localhost:5173",  
+  "http://localhost:5174",  
+  "http://localhost:3000"   
+];
 
 app.use((req, res, next) => {
   const requestOrigin = req.headers.origin;
 
   console.log("CORS Debug → Request Origin:", requestOrigin);
 
-  if (requestOrigin === FRONTEND_URL) {
+  // Check if including requestOrigin exists and is in allowed list
+  if (requestOrigin && ALLOWED_ORIGINS.includes(requestOrigin)) {
     console.log("CORS Debug → Origin Matched");
 
-    res.header("Access-Control-Allow-Origin", FRONTEND_URL);
+    res.header("Access-Control-Allow-Origin", requestOrigin);
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
     res.header("Access-Control-Allow-Credentials", "true");
   } else {
-    console.log("CORS Debug → Origin NOT matched");
+    console.log("CORS Debug → Origin NOT matched or undefined");
   }
 
   if (req.method === "OPTIONS") {
@@ -52,17 +55,13 @@ app.use((req, res, next) => {
   next();
 });
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-
 
 app.get('/', (req, res) => {
   console.log("Health check route hit");
   res.send('Server is running');
 });
-
 
 app.use('/api/v1/blog', blogRouter);
 app.use('/api/v1/contact', contactRouter);
@@ -72,7 +71,6 @@ app.use('/api/v1/testimonials', testimonialRouter);
 app.use('/api/v1/faqs', faqRouter);
 app.use('/api/v1/works', workRouter);
 app.use('/api/v1/preview', previewRouter);
-
 
 const startServer = async () => {
   try {
