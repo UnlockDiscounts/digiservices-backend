@@ -26,8 +26,8 @@ app.use((req, res, next) => {
 const ALLOWED_ORIGINS = [
   "https://digi-services-seven.vercel.app",
   "http://localhost:5173",  
-  "http://localhost:5174",  
-  "http://localhost:3000"   
+  "https://unlockdigiservices.com",
+  "https://www.unlockdigiservices.com"
 ];
 
 app.use((req, res, next) => {
