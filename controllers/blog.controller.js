@@ -6,6 +6,10 @@ export const createPost = async (req, res) => {
   try {
     const { header, description, category } = req.body;
 
+    if (!header || !description || !category) {
+      return res.status(400).json({ message: "All fields required" });
+    }
+
     const imageUrls = req.files?.map(f => f.path) || [];
 
     const post = await Post.create({
@@ -23,7 +27,6 @@ export const createPost = async (req, res) => {
   }
 };
 
-
 // GET ALL POSTS
 export const getPosts = async (req, res) => {
   const posts = await Post.find().sort({ createdAt: -1 });
@@ -33,9 +36,13 @@ export const getPosts = async (req, res) => {
 
 // GET SINGLE POST
 export const getPostById = async (req, res) => {
-  const post = await Post.findById(req.params.id);
-  if (!post) return res.status(404).json({ message: "Not found" });
-  res.json(post);
+  try {
+    const post = await Post.findById(req.params.id);
+    if (!post) return res.status(404).json({ message: "Not found" });
+    res.json(post);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
 
@@ -44,9 +51,13 @@ export const updatePost = async (req, res) => {
   try {
     const { header, description, category } = req.body;
 
-    const imageUrls = req.files?.map(f => f.path);
+    const update = {};
 
-    const update = { header, description, category };
+    if (header) update.header = header;
+    if (description) update.description = description;
+    if (category) update.category = category;
+
+    const imageUrls = req.files?.map(f => f.path);
     if (imageUrls?.length) update.images = imageUrls;
 
     const updated = await Post.findByIdAndUpdate(
@@ -55,9 +66,12 @@ export const updatePost = async (req, res) => {
       { new: true }
     );
 
+    if (!updated) {
+      return res.status(404).json({ message: "Not found" });
+    }
+
     res.json(updated);
   } catch (err) {
-    console.error(err);
     res.status(500).json({ message: "Server error" });
   }
 };
